@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import { generateGraphData, createNodeThreeObject } from './graphDataGenerator';
 import './NetworkGraph.css';
+import { getViewportSize } from './telegram'; // функция регулировки размеров 
 
 const NetworkGraph = () => {
   const fgRef = useRef();
@@ -21,17 +22,16 @@ const NetworkGraph = () => {
   }, []);
 
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
-    };
+useEffect(() => {
+  const handleResize = () => {
+    const { width, height } = getViewportSize();
+    setWindowSize({ width, height });
+  };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  handleResize(); // Вызовите сразу для установки начальных размеров
+  window.addEventListener('resize', handleResize);
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
 
   return (
     <div className="network-graph-container">
